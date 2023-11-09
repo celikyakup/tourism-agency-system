@@ -107,10 +107,11 @@ public class SearchHotelGUI extends JFrame{
                 System.out.println(ex.getMessage());
                 Helper.showMsg("Giriş çıkış tarihini giriniz.");
             }
-            if (numChild<=0 && numAdult<=0){
+            if (numChild<=0 && numAdult<=0 ){
                 Helper.showMsg("Kişi sayısını belirtiniz!!");
-            }
-            else loadSearchModel();
+            } else if (numChild>0 && numAdult<=0) {
+                Helper.showMsg("Tek başına çocuga rezervasyon yapılamaz!");
+            } else loadSearchModel();
         });
         btn_logout.addActionListener(new ActionListener() {
             @Override
@@ -140,7 +141,7 @@ public class SearchHotelGUI extends JFrame{
                     System.out.println(ex.getMessage());
                 }
 
-                if (season_start_date != null && season_start_date.before(check_in_date) && season_end_date!=null && season_end_date.after(check_out_date)) {
+                if (season_start_date != null && season_start_date.before(check_in_date) && season_end_date!=null && season_end_date.after(check_out_date)&& check_in_date.getTime()<=check_out_date.getTime()) {
 
                     for (RoomPrice r : RoomPrice.getListByHotel(season.getHotel_id(), season.getId())) {
                         if (r.getStock()>0 && (numChild+numAdult)<=r.getRoom().getBed_number()){
@@ -151,11 +152,21 @@ public class SearchHotelGUI extends JFrame{
                             row_search_list[4] = r.getRoom().getName();
                             row_search_list[5]=r.getRoom().getBed_number();
                             //5. Misafir bilgisi, kalınacak gece sayısı ve pansiyon tipine göre konaklamaya ait fiyat başarılı bir şekilde hesaplanıyor.
-                            row_search_list[6] = (calculateRezDate(check_in_date, check_out_date)) * (r.getAdult_price()) * numAdult;
-                            row_search_list[7] = (calculateRezDate(check_in_date, check_out_date)) * r.getChild_price() * numChild;
+                            if (calculateRezDate(check_in_date,check_out_date)==0){
+                                row_search_list[6] = (calculateRezDate(check_in_date, check_out_date)+1) * (r.getAdult_price()) * numAdult;
+                                row_search_list[7] = (calculateRezDate(check_in_date, check_out_date)+1) * r.getChild_price() * numChild;
+                                System.out.println(calculateRezDate(check_in_date,check_out_date));
+                            }
+                            else {
+                                row_search_list[6]=calculateRezDate(check_in_date,check_out_date)*(r.getAdult_price())*numAdult;
+                                row_search_list[7] = (calculateRezDate(check_in_date, check_out_date)) * r.getChild_price() * numChild;
+                            }
                             mdl_search_list.addRow(row_search_list);
                         }
                     }
+                } else if (check_in_date.getTime()>check_out_date.getTime()) {
+                    Helper.showMsg("Giriş tarihi çıkış tarihinden ileri bir tarih olamaz!");
+                    return;
                 }
             }
         }

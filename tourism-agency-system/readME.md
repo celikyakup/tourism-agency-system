@@ -4,6 +4,7 @@ In this project, 2 types of users are defined.
 Admin:It has authority to add a user.
 AgencyPerson: It has can add hotel and hotel room and hotel price and can make booking.
 
+
 Login Screen
 Operator can login from this screen.
 
