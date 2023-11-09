@@ -4,6 +4,8 @@ In this project, 2 types of users are defined.
 Admin:It has authority to add a user.
 AgencyPerson: It has can add hotel and hotel room and hotel price and can make booking.
 
+Working video of the system.
+https://www.loom.com/share/ea82305cd0ff4011b2513c295fa2f45f?sid=d6501c09-333d-448d-9ecc-def6765b0366
 
 Login Screen
 Operator can login from this screen.
